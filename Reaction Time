@@ -1,0 +1,73 @@
+from selenium import webdriver
+from bs4 import BeautifulSoup
+import pyautogui
+import time
+
+# Initialize a Selenium webdriver
+driver = webdriver.Chrome()
+driver.get('https://humanbenchmark.com/tests/reactiontime')
+
+# remove speed limit of pyautogui
+pyautogui.PAUSE = 0.0
+pyautogui.MINIMUM_DURATION = 0.0
+
+time.sleep(2)
+pyautogui.moveTo(882, 27)  # full-screen
+pyautogui.leftClick()
+time.sleep(0.5)
+pyautogui.moveTo(1080, 800)  # close cookie tabs
+pyautogui.leftClick()
+time.sleep(0.5)
+pyautogui.moveTo(1400, 146)  # press login
+pyautogui.leftClick()
+time.sleep(0.5)
+pyautogui.moveTo(818, 440)  # press username
+pyautogui.leftClick()
+pyautogui.typewrite("username")  # enter username
+time.sleep(0.5)
+pyautogui.moveTo(818, 520)  # press password
+pyautogui.leftClick()
+pyautogui.typewrite("password")  # enter password
+pyautogui.moveTo(818, 585)  # submit
+pyautogui.leftClick()
+time.sleep(2)
+pyautogui.moveTo(866, 919)  # click on the test
+pyautogui.leftClick()
+time.sleep(1)
+pyautogui.moveTo(980, 650)  # start the test
+pyautogui.leftClick()
+count = 0
+
+while True:
+    # get all the divs from the webpage
+    page_source = driver.page_source
+    soup = BeautifulSoup(page_source, 'html.parser')
+    incomplete_elements1 = soup.find_all('div')
+
+    if "Click!" in incomplete_elements1[14]:  # if the sign to click has appeared
+        pyautogui.leftClick()  # click
+        time.sleep(0.5)
+        pyautogui.leftClick()  # start the next one
+        count += 1
+
+        if count == 5:  # if all 5 rounds have played
+            # get the page source
+            page_source = driver.page_source
+            soup = BeautifulSoup(page_source, 'html.parser')
+            incomplete_elements1 = soup.find_all(class_='css-0')
+            element = incomplete_elements1[0].text  # get the reaction speed
+            if int(element[0:2]) < 12:  # if less than 12, pres save
+                pyautogui.moveTo(888, 606)
+                pyautogui.leftClick()
+                count = 0
+            else:
+                # restart the test
+                pyautogui.moveTo(1040, 606)
+                pyautogui.leftClick()
+                time.sleep(0.5)
+
+                # start test
+                pyautogui.moveTo(980, 650)
+                pyautogui.leftClick()
+                count = 0
+
