@@ -1,0 +1,150 @@
+from selenium import webdriver
+from bs4 import BeautifulSoup
+import pyautogui
+import time
+import math
+
+# Initialize a Selenium webdriver (make sure you have the appropriate driver installed)
+driver = webdriver.Chrome()  # You can change this to the appropriate driver for your browser
+driver.get('https://humanbenchmark.com/tests/reactiontime')
+
+pyautogui.PAUSE = 0.0
+pyautogui.MINIMUM_DURATION = 0.0
+
+time.sleep(2)
+pyautogui.moveTo(882, 27)
+pyautogui.leftClick()
+time.sleep(0.5)
+pyautogui.moveTo(1080, 800)
+pyautogui.leftClick()
+time.sleep(0.5)
+pyautogui.moveTo(1400, 146)
+pyautogui.leftClick()
+time.sleep(0.5)
+pyautogui.moveTo(818, 440)
+pyautogui.leftClick()
+pyautogui.typewrite("ptomoughc")
+time.sleep(0.5)
+pyautogui.moveTo(818, 520)
+pyautogui.leftClick()
+pyautogui.typewrite("Symbiote2004")
+time.sleep(0.5)
+pyautogui.moveTo(818, 585)
+pyautogui.leftClick()
+time.sleep(1)
+pyautogui.moveTo(858, 516)
+pyautogui.leftClick()
+time.sleep(2.5)
+pyautogui.moveTo(951, 573)
+pyautogui.leftClick()
+time.sleep(1)
+from selenium import webdriver
+from bs4 import BeautifulSoup
+import pyautogui
+import time
+
+# Initialize a Selenium webdriver (make sure you have the appropriate driver installed)
+driver = webdriver.Chrome()  # You can change this to the appropriate driver for your browser
+driver.get('https://humanbenchmark.com/tests/sequence')
+
+# remove speed limit of pyautogui
+pyautogui.PAUSE = 0.0
+pyautogui.MINIMUM_DURATION = 0.0
+
+time.sleep(2)
+pyautogui.moveTo(882, 27)  # full-screen
+pyautogui.leftClick()
+time.sleep(0.5)
+pyautogui.moveTo(1080, 800)  # close cookie tabs
+pyautogui.leftClick()
+time.sleep(0.5)
+pyautogui.moveTo(1400, 146)  # press login
+pyautogui.leftClick()
+time.sleep(0.5)
+pyautogui.moveTo(818, 440)  # press username
+pyautogui.leftClick()
+pyautogui.typewrite("username")  # enter username
+time.sleep(0.5)
+pyautogui.moveTo(818, 520)  # press password
+pyautogui.leftClick()
+pyautogui.typewrite("password")  # enter password
+pyautogui.moveTo(950, 581)  # submit
+pyautogui.leftClick()
+time.sleep(2)
+pyautogui.moveTo(858, 516)  # click on the test
+pyautogui.leftClick()
+time.sleep(2)
+pyautogui.moveTo(951, 573)  # click start
+pyautogui.leftClick()
+time.sleep(1)
+
+# where to press the buttons
+cords = [[820, 340], [955, 340], [1085, 340], [820, 470], [955, 470], [1085, 470], [820, 605], [955, 605], [1085, 605]]
+try:
+    sequence = []
+    for level in range(1, 100000):
+        temp2 = []
+        for repeat in range(0, level):
+            temp = []
+            # get page source
+            page_source = driver.page_source
+            soup = BeautifulSoup(page_source, 'html.parser')
+            array = soup.find_all(class_='squares')
+
+            # split up the elements
+            arraySplit = str(array[0]).split("><")
+
+            for item in arraySplit:
+                if "square" in item and "active" not in item and "squares" not in item and "square-row" not in item:
+                    # if the item is not shown, append a 0
+                    temp.append(0)
+                elif "active" in item:
+                    # if it is shown, append a 1
+                    temp.append(1)
+
+            # append the position where the lit up square appeared
+            for i in range(0, len(temp)):
+                if temp[i] == 1:
+                    temp2.append(i+1)
+
+            # interval between the buttons being shown
+            time.sleep(0.49114394187927246)
+
+        # append the last button in the sequence
+        sequence.append(temp2[-1])
+
+        time.sleep(0.5)
+
+        # press the corresponding button to the number in the sequence
+        for i in range(0, len(sequence)):
+            if sequence[i] == 1:
+                pyautogui.leftClick(cords[0][0], cords[0][1])
+            elif sequence[i] == 2:
+                pyautogui.leftClick(cords[1][0], cords[1][1])
+            elif sequence[i] == 3:
+                pyautogui.leftClick(cords[2][0], cords[2][1])
+            elif sequence[i] == 4:
+                pyautogui.leftClick(cords[3][0], cords[3][1])
+            elif sequence[i] == 5:
+                pyautogui.leftClick(cords[4][0], cords[4][1])
+            elif sequence[i] == 6:
+                pyautogui.leftClick(cords[5][0], cords[5][1])
+            elif sequence[i] == 7:
+                pyautogui.leftClick(cords[6][0], cords[6][1])
+            elif sequence[i] == 8:
+                pyautogui.leftClick(cords[7][0], cords[7][1])
+            elif sequence[i] == 9:
+                pyautogui.leftClick(cords[8][0], cords[8][1])
+            time.sleep(0.1)
+
+        # wait for the next round of sequences
+        time.sleep(1)
+
+except:
+    time.sleep(10000)
+
+
+
+
+
+

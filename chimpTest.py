@@ -1,0 +1,94 @@
+from selenium import webdriver
+from bs4 import BeautifulSoup
+import pyautogui
+import time
+
+# Initialize a Selenium webdriver (make sure you have the appropriate driver installed)
+driver = webdriver.Chrome()  # You can change this to the appropriate driver for your browser
+driver.get('https://humanbenchmark.com/tests/chimp')
+
+# remove speed limit of pyautogui
+pyautogui.PAUSE = 0.0
+pyautogui.MINIMUM_DURATION = 0.0
+
+time.sleep(2)
+pyautogui.moveTo(882, 27)  # full-screen
+pyautogui.leftClick()
+time.sleep(0.5)
+pyautogui.moveTo(1080, 800)  # close cookie tabs
+pyautogui.leftClick()
+time.sleep(0.5)
+pyautogui.moveTo(1400, 146)  # press login
+pyautogui.leftClick()
+time.sleep(0.5)
+pyautogui.moveTo(818, 440)  # press username
+pyautogui.leftClick()
+pyautogui.typewrite("username")  # enter username
+time.sleep(0.5)
+pyautogui.moveTo(818, 520)  # press password
+pyautogui.leftClick()
+pyautogui.typewrite("password")  # enter password
+pyautogui.moveTo(950, 581)  # submit
+pyautogui.leftClick()
+time.sleep(2)
+pyautogui.moveTo(871, 515)  # click on the test
+pyautogui.leftClick()
+time.sleep(2)
+pyautogui.moveTo(951, 600)  # click start
+pyautogui.leftClick()
+time.sleep(1)
+
+# max level
+max = 37
+
+Order = []
+# possible colours of the buttons
+colour1 = (255, 255, 255)
+colour2 = (65, 147, 214)
+colour3 = (149, 195, 232)
+
+# Load the webpage
+while max > 0:
+    # get page source
+    page_source = driver.page_source
+    soup = BeautifulSoup(page_source, 'html.parser')
+    for div in soup.find_all('div'):
+        if 'data-cellnumber' in div.attrs:
+            # add the numbers that appear in the order they appear in
+            numbers = str(div).split('"')
+            Order.append(numbers[3])
+    try:
+        for i in range(0, len(Order)):
+            count = 0
+            found = False
+            for j in range(0, 5):
+                for k in range(0, 8):
+                    # iterate through where the boxes can be clicked
+                    pyautogui.moveTo(644+90*k, 222+90*j)
+                    # if they have found a box that can be clicked
+                    if pyautogui.pixelMatchesColor(pyautogui.position().x, pyautogui.position().y, colour2) or pyautogui.pixelMatchesColor(pyautogui.position().x, pyautogui.position().y, colour1) or pyautogui.pixelMatchesColor(pyautogui.position().x, pyautogui.position().y, colour3):
+                        # if the box it is on is the corresponding box that should be pressed in the sequence
+                        if str(i+1) == str(Order[count]):
+                            pyautogui.leftClick()  # press it
+                            Order.remove(str(i+1))  # remove it from the array
+                            count -= 1
+                            found = True
+                        count += 1
+                    # if the number has been found for this iteration, skip to the next number
+                    if found:
+                        break
+                if found:
+                    break
+    except:
+        pass
+
+    max -= 1
+    if max != 0:
+        # press next if the test has not ended
+        pyautogui.moveTo(1000, 600)
+        pyautogui.leftClick()
+        time.sleep(1)
+    else:
+        time.sleep(10000)
+
+
