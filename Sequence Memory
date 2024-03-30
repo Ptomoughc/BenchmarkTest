@@ -4,8 +4,8 @@ import pyautogui
 import time
 import math
 
-# Initialize a Selenium webdriver (make sure you have the appropriate driver installed)
-driver = webdriver.Chrome()  # You can change this to the appropriate driver for your browser
+# Initialize a Selenium webdriver
+driver = webdriver.Chrome()
 driver.get('https://humanbenchmark.com/tests/reactiontime')
 
 pyautogui.PAUSE = 0.0
